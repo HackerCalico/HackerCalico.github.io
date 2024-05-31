@@ -1313,7 +1313,7 @@ call MyMessageBoxA</code></pre>
 <p>我想到的办法是实现汇编指令的解释器。解释器是一种逐行对代码进行词法、语法、语义等分析进行运行的程序。</p>
 <p>只要我传入汇编指令的文本，解释器逐条指令解析实现对应的功能即可。这里涉及到几个问题。比如解释到 mov rsp, 0x00，此时不应该将真实 RSP 寄存器的值改为 0x00，这样会导致解释器本身错误。解决办法是实现虚拟寄存器和虚拟栈，将虚拟的 vtRSP 改为 0x00。在解释 Windows API 的调用指令时，先将虚拟寄存器的值覆盖真实寄存器，此时 Windows API 的参数为构造完整的状态，之后直接调用 Windows API 即可成功。</p>
 <p><mark>下面以 MyMessageBoxA 为例演示解释过程：</mark></p>
-<p>该函数的硬编码与汇编指令：</p>
+<p>该函数的汇编指令：</p>
 <pre><code class="fenced-code-block language-c">MOV QWORD PTR <span class="token punctuation">[</span>RSP <span class="token operator">+</span> <span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">,</span> RCX
 SUB RSP<span class="token punctuation">,</span> <span class="token number">0X38</span>
 MOV BYTE PTR <span class="token punctuation">[</span>RSP <span class="token operator">+</span> <span class="token number">0X20</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span>
