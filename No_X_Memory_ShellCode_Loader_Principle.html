@@ -1304,7 +1304,7 @@ C3                <span class="token operator">--</span><span class="token opera
 <p><mark>于是当前的研究转化为其汇编指令实现了什么功能。</mark></p>
 <p>通过学习汇编语言，可以知道这些汇编指令简单来说就是不断修改寄存器、栈、内存的值，通过不断的修改构造好调用 Windows API 所需的参数，进而成功调用 Windows API。</p>
 <p>函数参数的构造过程可以通过上文的 MyMessageBoxA 来简单解释，该函数通过以下代码调用：</p>
-<pre><code class="fenced-code-block language-c"><span class="token function">MyMessageBoxA</span><span class="token punctuation">(</span>MessageBoxA<span class="token punctuation">)</span></code></pre>
+<pre><code class="fenced-code-block language-c"><span class="token function">MyMessageBoxA</span><span class="token punctuation">(</span>MessageBoxA<span class="token punctuation">);</span></code></pre>
 <p>该行代码实际上就构造好了函数的参数，其汇编指令：</p>
 <pre><code class="fenced-code-block language-c">mov rcx<span class="token punctuation">,</span>qword ptr <span class="token punctuation">[</span>__imp_MessageBoxA<span class="token punctuation">]</span>
 call MyMessageBoxA</code></pre>
