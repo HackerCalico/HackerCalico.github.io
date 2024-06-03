@@ -1305,7 +1305,7 @@ C3                <span class="token operator">--</span><span class="token opera
 <p><mark>So the current research is transformed into what functions its assembly instructions implement.</mark></p>
 <p>By learning assembly language, you can know that these assembly instructions simply continuously modify the values ​​of registers, stacks, and memory, and construct the parameters required to call the Windows API through constant modification, and then successfully call the Windows API.</p>
 <p>The construction process of function parameters can be simply explained through MyMessageBoxA above. The function is called through the following code:</p>
-<pre><code class="fenced-code-block language-c"><span class="token function">MyMessageBoxA</span><span class="token punctuation">(</span>MessageBoxA<span class="token punctuation">)</span></code></pre>
+<pre><code class="fenced-code-block language-c"><span class="token function">MyMessageBoxA</span><span class="token punctuation">(</span>MessageBoxA<span class="token punctuation">);</span></code></pre>
 <p>This line of code actually constructs the parameters of the function, and its assembly instructions are:</p>
 <pre><code class="fenced-code-block language-c">mov rcx<span class="token punctuation">,</span>qword ptr <span class="token punctuation">[</span>__imp_MessageBoxA<span class="token punctuation">]</span>
 call MyMessageBoxA</code></pre>
