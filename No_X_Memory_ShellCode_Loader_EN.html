@@ -1,0 +1,309 @@
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-239d2961-03ef-48ed-a1bf-6c387f9ea425@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-b82a53e7-f6b3-49d8-9012-83e0de97712f@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-8601388c-d0ed-451b-b208-cb5363adc927@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-9edfd565-264c-46c8-ace1-e0b712c3211d@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-3313b6ae-d1db-4dee-8b43-504a80b812e6@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-4fe4295f-17c4-4171-906e-be2145ebfc05@mhtml.blink">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  
+  
+  
+  
+  
+  
+</head>
+<body>
+  <article class="markdown-body"><h4 class="atx" id="lessmarkgreatertranslated-by-edgelessmarkgreater"><mark _msttexthash="320216" _msthash="0">Translated by Edge.</mark></h4>
+<h1 class="atx" id="no_x_memory_shellcode_loader" _msttexthash="743483" _msthash="1">No_X_Memory_ShellCode_Loader</h1>
+<h3 class="atx" id="1-介绍" _msttexthash="253045" _msthash="2">1. Introduction</h3>
+<p><mark _msttexthash="3553576" _msthash="3">A new ShellCode loader that loads ShellCode without executable permissions.</mark></p>
+<p><mark _msttexthash="3209856" _msthash="4">New ShellCode Loader, Loading ShellCode without executable permission.</mark></p>
+<p _msttexthash="3471546" _msthash="5">Project: <a href="https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader" _istranslated="1">https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader</a></p>
+<p _msttexthash="3826745" _msthash="6">Blog: <a href="https://hackercalico.github.io/No_X_Memory_ShellCode_Loader_EN.html" _istranslated="1">https://hackercalico.github.io/No_X_Memory_ShellCode_Loader_EN.html</a></p>
+<p _msttexthash="30666116" _msthash="7">The technology was first proposed in early 2024 when a very simple x86 sample was released to prove feasibility. Because of the tight schedule this year, I haven't released the x64 version until now, which can be said to be a fairly complete version.</p>
+<p _msttexthash="963443" _msthash="8">I'm thrilled with this breakthrough!</p>
+<p><img alt="1.png" src="https://raw.githubusercontent.com/HackerCalico/No_X_Memory_ShellCode_Loader/main/run.png" _mstalt="51376" _msthash="9"></p>
+<h3 class="atx" id="2-规避优势" _msttexthash="520299" _msthash="10">2. Circumvent advantages</h3>
+<p _msttexthash="4703010" _msthash="11">No decryption, no X memory, directly load the ShellCode ciphertext in the running R memory.</p>
+<p _msttexthash="916604" _msthash="12">The following features are avoided:</p>
+<p _msttexthash="1003249" _msthash="13">(1) Request memory for RWX attributes.</p>
+<p _msttexthash="1946399" _msthash="14">(2) Modify the memory properties of W and X back and forth.</p>
+<p _msttexthash="1166438" _msthash="15">(3) A ShellCode feature appears in memory.</p>
+<h3 class="atx" id="3-技术原理" _msttexthash="472277" _msthash="16">3. Technical Principles</h3>
+<p><strong _msttexthash="277745" _msthash="17">Loading process:</strong></p>
+<p _msttexthash="1445444" _msthash="18">(1) Generate a ShellCode machine code normally.</p>
+<p _msttexthash="2211937" _msthash="19">(2) ShellCode --- Converter ---&gt; Custom assembly directives.</p>
+<p _msttexthash="2180256" _msthash="20">(3) The interpreter runs the custom assembly instruction.</p>
+<p><strong _msttexthash="104728" _msthash="21">Details:</strong></p>
+<p><a href="https://hackercalico.github.io/No_X_Memory_ShellCode_Loader_Principle_EN.html" _msttexthash="4394338" _msthash="22">https://hackercalico.github.io/No_X_Memory_ShellCode_Loader_Principle_EN.html</a></p>
+<h3 class="atx" id="4-项目文件" _msttexthash="372489" _msthash="23">4. Project Documents</h3>
+<p _msttexthash="3903692" _msthash="24"><u _istranslated="1">ShellCode</u>: Execute the CMD command ShellCode &gt; Get File Information List ShellCode.</p>
+<p _msttexthash="1501409" _msthash="25"><u _istranslated="1">Converter</u>: Custom assembly command converter.</p>
+<pre><code class="fenced-code-block language-bash">pip <span class="token function">install</span> capstone</code></pre>
+<p _msttexthash="3032653" _msthash="26"><u _istranslated="1">Loader</u>: ShellCode loader (custom assembly instruction interpreter).</p>
+<h3 class="atx" id="5-转换器实现" _msttexthash="654173" _msthash="27">5. Converter implementation</h3>
+<p _msttexthash="9943310" _msthash="28">To alleviate the pressure on the interpreter, our custom assembly instructions must be designed in a format that is easy to interpret.</p>
+<p><mark _msttexthash="5261802" _msthash="29">The following is an example of executing ShellCode with the CMD command provided in this project:</mark></p>
+<p><strong _msttexthash="1609946" _msthash="30">(1) Generate the original assembly instructions</strong></p>
+<p _msttexthash="5671926" _msthash="31">Convert the ShellCode machine code (ShellCode.txt) to the original assembly instruction (asm.txt).</p>
+<p _msttexthash="2473406" _msthash="32">This feature is simply implemented using the Capstone library.</p>
+<pre><code class="fenced-code-block language-bash"><span class="token operator">&gt;</span> python Converter.py
+<span class="token number">1</span>.反汇编
+<span class="token number">2</span>.Imul转换
+<span class="token number">3</span>.生成自定义汇编指令
+选择: <span class="token number">1</span>
+ShellCode使用的汇编指令: <span class="token punctuation">{</span><span class="token string">'lea'</span>, <span class="token string">'cdqe'</span>, <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>, <span class="token string">'repStosb'</span><span class="token punctuation">}</span>
+汇编指令生成完毕: asm.txt</code></pre>
+<p _msttexthash="11980124" _msthash="33">asm.txt：</p>
+<pre><code class="fenced-code-block language-c"><span class="token number">0x0</span>_mov_qword ptr <span class="token punctuation">[</span>rsp <span class="token operator">+</span> <span class="token number">0x20</span><span class="token punctuation">]</span><span class="token punctuation">,</span> r9
+<span class="token number">0x5</span>_mov_qword ptr <span class="token punctuation">[</span>rsp <span class="token operator">+</span> <span class="token number">0x18</span><span class="token punctuation">]</span><span class="token punctuation">,</span> r8
+<span class="token number">0xa</span>_mov_dword ptr <span class="token punctuation">[</span>rsp <span class="token operator">+</span> <span class="token number">0x10</span><span class="token punctuation">]</span><span class="token punctuation">,</span> edx
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></code></pre>
+<p><strong _msttexthash="293579" _msthash="34">(2) Modify asm.txt</strong></p>
+<p _msttexthash="37952304" _msthash="35">Amendments need to be made to take into account that there may be some special circumstances in the original assembly directive. So I divided the conversion process into two stages: first to the original assembly instruction and then to the custom assembly instruction.</p>
+<p _msttexthash="21021767" _msthash="36">Looking at the original assembly instructions, we can see that there are imul instructions, and they are all in the format of imul a, a, b. Let's just convert them all to imul a, b format for easy processing.</p>
+<pre><code class="fenced-code-block language-bash"><span class="token operator">&gt;</span> python Converter.py
+<span class="token number">1</span>.反汇编
+<span class="token number">2</span>.Imul转换
+<span class="token number">3</span>.生成自定义汇编指令
+选择: <span class="token number">2</span>
+已将 asm.txt 中的 imul a, a, b 全部转换为 imul a, b</code></pre>
+<p><strong _msttexthash="1295125" _msthash="37">(3) Generate custom assembly instructions</strong></p>
+<p _msttexthash="4535882" _msthash="38">Converts the original assembly directive in the asm.txt to a custom assembly directive.</p>
+<pre><code class="fenced-code-block language-bash"><span class="token operator">&gt;</span> python Converter.py
+<span class="token number">1</span>.反汇编
+<span class="token number">2</span>.Imul转换
+<span class="token number">3</span>.生成自定义汇编指令
+选择: <span class="token number">3</span>
+0_4_q_pq70+i20_q_q38_<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>2ed_3_q__q__<span class="token operator">!</span>
+
+PVOID mnemonicMapping<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> Push, Pop, <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>, Jle <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<p _msttexthash="8318583" _msthash="39">0_4_q_pq70+i20_q_q38 for the first custom assembly directive,! Customize the end flag for the entire assembly directive.</p>
+<p _msttexthash="4150835" _msthash="40">The original assembly directive for the first article: 0x00 mov qword ptr [rsp + 0x20], r9</p>
+<p _msttexthash="500019" _msthash="41"><u _istranslated="1">Command address</u>: 0x00 ------&gt; 0</p>
+<p _msttexthash="4927078" _msthash="42">It needs to be used when dealing with JCC jump instructions, removing 0x to shorten the length.</p>
+<p _msttexthash="291330" _msthash="43"><u _istranslated="1">Mnemonic</u>: MOV ------&gt; 4</p>
+<p _msttexthash="1069003" _msthash="44">4 is the subscript of mov in mnemonicMap.</p>
+<p _msttexthash="28810067" _msthash="45">The interpreter executes instructions one by one, and obtains the handler pointer of the current instruction in mnemonicMap through subscripts to make reflection calls. Avoided a lot of if else or switch cases in the interpreter code.</p>
+<p _msttexthash="1174485" _msthash="46"><u _istranslated="1">Operand 1</u>: Qword PTR [RSP + 0x20] ------&gt; q_pq70 + I20</p>
+<p _msttexthash="953953" _msthash="47">q stands for QWORD and p stands for ptr.</p>
+<p _msttexthash="72251075" _msthash="48">q70 represents vtRSP. The value of the virtual register is stored in the interpreter via an array of vtRegs, 70 is the offset of the vtRSP relative to the base address of the vtRegs, and the value of the register is manipulated directly from the address. Eliminates the need for a large number of registers with different digits in the interpreter code, as well as tedious operations.</p>
+<p _msttexthash="544869" _msthash="49">i20 means 0x20 immediately.</p>
+<p _msttexthash="261391" _msthash="50"><u _istranslated="1">Op. 2</u>: R9 ------&gt; q_q38</p>
+<p _msttexthash="273923" _msthash="51">q stands for QWORD.</p>
+<p _msttexthash="833560" _msthash="52">q38 represents R9, the same is true.</p>
+<h3 class="atx" id="6-解释器实现" _msttexthash="745979" _msthash="53">6. Interpreter implementation</h3>
+<p><strong _msttexthash="1539889" _msthash="54">(1) Create virtual stacks and virtual registers</strong></p>
+<pre><code class="fenced-code-block language-c">PVOID vtStack <span class="token operator">=</span> <span class="token function">malloc</span><span class="token punctuation">(</span><span class="token number">0x10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+DWORD_PTR vtRegs<span class="token punctuation">[</span><span class="token number">18</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtRegs<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>vtStack <span class="token operator">+</span> <span class="token number">0x9000</span><span class="token punctuation">;</span></code></pre>
+<p _msttexthash="1744860" _msthash="55">14 and 15 correspond to vtRSP and vtRBP, respectively.</p>
+<p><strong _msttexthash="1536782" _msthash="56">(2) Set the initial value of the virtual register</strong></p>
+<p _msttexthash="19666166" _msthash="57">Because the interpreter is simulated from the beginning of the ShellCode function, the parameters of the ShellCode function are constructed in the virtual space before the simulation begins.</p>
+<p _msttexthash="6056063" _msthash="58">The CMD command provided by this project executes the ShellCode function by calling the following code:</p>
+<pre><code class="fenced-code-block language-c"><span class="token function">ExecuteCmd</span><span class="token punctuation">(</span>commandPara<span class="token punctuation">,</span> commandParaLength<span class="token punctuation">,</span> <span class="token operator">&amp;</span>outputData<span class="token punctuation">,</span> <span class="token operator">&amp;</span>outputDataLength<span class="token punctuation">,</span> funcAddr<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p _msttexthash="2157272" _msthash="59">The assembly directive corresponding to this line of code:</p>
+<pre><code class="fenced-code-block language-c">lea rax<span class="token punctuation">,</span> <span class="token punctuation">[</span>funcAddr<span class="token punctuation">]</span>
+mov qword ptr <span class="token punctuation">[</span>rsp<span class="token operator">+</span><span class="token number">20</span>h<span class="token punctuation">]</span><span class="token punctuation">,</span> rax
+lea r9<span class="token punctuation">,</span> <span class="token punctuation">[</span>outputDataLength<span class="token punctuation">]</span>
+lea r8<span class="token punctuation">,</span> <span class="token punctuation">[</span>outputData<span class="token punctuation">]</span>
+mov edx<span class="token punctuation">,</span> dword ptr <span class="token punctuation">[</span>commandParaLength<span class="token punctuation">]</span>
+lea rcx<span class="token punctuation">,</span> <span class="token punctuation">[</span>commandPara<span class="token punctuation">]</span>
+call ExecuteCmd</code></pre>
+<p _msttexthash="4564586" _msthash="60">So you need to build the function parameters in the virtual space with the following code:</p>
+<pre><code class="fenced-code-block language-c">vtRegs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pFuncAddr<span class="token punctuation">;</span>
+<span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">(</span>vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">0x20</span><span class="token punctuation">)</span> <span class="token operator">=</span> vtRegs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+vtRegs<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pOutputDataLength<span class="token punctuation">;</span>
+vtRegs<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pOutputData<span class="token punctuation">;</span>
+vtRegs<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> commandParaLength<span class="token punctuation">;</span>
+vtRegs<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>commandPara<span class="token punctuation">;</span>
+vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong _msttexthash="1237353" _msthash="61">(3) Parsing custom assembly instructions</strong></p>
+<p _msttexthash="11731278" _msthash="62">The elements of each instruction are parsed according to the format of <mark _istranslated="1">Instruction Address_Mnemonic_Bit 1_Omannamon 1_Number of Digits 2_ Operand 2</mark>.</p>
+<p _msttexthash="26213733" _msthash="63">The type and address of each operand can be obtained through the GetOpTypeAndAddr function, and the handler of each instruction will directly operate on its value through the address of the operand, which is very convenient.</p>
+<p _msttexthash="16875378" _msthash="64"><u _istranslated="1">If the operand is immediate</u>, for example, i12 (0x12). The 12 strings are converted to numbers through the strtol function, and the address of the number is the address of the operand.</p>
+<p _msttexthash="67787226" _msthash="65"><u _istranslated="1">If the operand is the second operand or memory space of the LEA</u>, for example, LQ70+i20 ([rsp + 0x20]) or pq70+i20 (PTR [rsp + 0x20]). The child element is parsed first, and the result is saved to number1. If the operand is the second operand of LEA, the address of number1 is the address of the operand. If the operand is memory space, the value of number1 is the address of the operand.</p>
+<p _msttexthash="13375583" _msthash="66"><u _istranslated="1">If the operand is a register</u>, e.g. Q70 (RSP). 70 is the offset of vtRSP relative to the vtRegs base address, then vtRegs base address + 70 is the address of the operand.</p>
+<pre><code class="fenced-code-block language-c"><span class="token comment">// 获取操作数值的 类型(r寄存器/m内存空间) + 地址</span>
+DWORD_PTR <span class="token function">GetOpTypeAndAddr</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> op<span class="token punctuation">,</span> <span class="token keyword">char</span><span class="token operator">*</span> pOpType1<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">,</span> PDWORD_PTR opNumber<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token comment">// 立即数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>op<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'i'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token operator">*</span>opNumber <span class="token operator">=</span> <span class="token function">strtol</span><span class="token punctuation">(</span>op <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>endPtr<span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>opNumber<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// lea [] / ptr []</span>
+    <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>op<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'l'</span> <span class="token operator">||</span> op<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'p'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token comment">// 解析算式 (未考虑“*”)</span>
+        <span class="token function">ParseFormula</span><span class="token punctuation">(</span>op <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> formula<span class="token punctuation">,</span> symbols<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 计算 (未考虑“*”)</span>
+        DWORD_PTR number1 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token comment">// lea []</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>op<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'l'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span>opNumber <span class="token operator">=</span> number1<span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>opNumber<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// ptr []</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>pOpType1 <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span>pOpType1 <span class="token operator">=</span> <span class="token char">'m'</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> number1<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 寄存器</span>
+    <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>pOpType1 <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span>pOpType1 <span class="token operator">=</span> <span class="token char">'r'</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pVtRegs <span class="token operator">+</span> <span class="token function">strtol</span><span class="token punctuation">(</span>op <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>endPtr<span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong _msttexthash="1888172" _msthash="67">(4) Call the handler of the corresponding instruction</strong></p>
+<p _msttexthash="7187141" _msthash="68">The handler pointer of the current instruction is obtained by parsing the subscript of the current instruction.</p>
+<pre><code class="fenced-code-block language-c">PVOID mnemonicMapping<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> Push<span class="token punctuation">,</span> Pop<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> Jle <span class="token punctuation">}</span><span class="token punctuation">;</span>
+PVOID instructionFunc <span class="token operator">=</span> mnemonicMapping<span class="token punctuation">[</span>mnemonicIndex<span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+<p><mark _msttexthash="2160210" _msthash="69">Here are some examples of handlers for several directives:</mark></p>
+<p><u _msttexthash="200343" _msthash="70">MOV directive</u></p>
+<pre><code class="fenced-code-block language-c"><span class="token comment">// 其他两个操作数的指令</span>
+<span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>instructionFunc<span class="token punctuation">)</span><span class="token punctuation">(</span>opType1<span class="token punctuation">,</span> opBit1<span class="token punctuation">,</span> opAddr1<span class="token punctuation">,</span> opBit2<span class="token punctuation">,</span> opAddr2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Mov</span><span class="token punctuation">(</span><span class="token keyword">char</span> opType1<span class="token punctuation">,</span> <span class="token keyword">char</span> opBit1<span class="token punctuation">,</span> DWORD_PTR opAddr1<span class="token punctuation">,</span> <span class="token keyword">char</span> opBit2<span class="token punctuation">,</span> DWORD_PTR opAddr2<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>opBit1<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token char">'q'</span><span class="token operator">:</span>
+        <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD64<span class="token punctuation">)</span>opAddr1 <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD64<span class="token punctuation">)</span>opAddr2<span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token char">'d'</span><span class="token operator">:</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>opType1 <span class="token operator">==</span> <span class="token char">'r'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span>opAddr1 <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD<span class="token punctuation">)</span>opAddr2<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD<span class="token punctuation">)</span>opAddr1 <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD<span class="token punctuation">)</span>opAddr2<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token char">'w'</span><span class="token operator">:</span>
+        <span class="token operator">*</span><span class="token punctuation">(</span>PWORD<span class="token punctuation">)</span>opAddr1 <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PWORD<span class="token punctuation">)</span>opAddr2<span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token char">'b'</span><span class="token operator">:</span>
+        <span class="token operator">*</span><span class="token punctuation">(</span>PBYTE<span class="token punctuation">)</span>opAddr1 <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PBYTE<span class="token punctuation">)</span>opAddr2<span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p _msttexthash="6263686" _msthash="71">case 'd' indicates that operand 1 is DWORD, and there is a special case when operand 1 is of type DWORD register.</p>
+<p _msttexthash="2085889" _msthash="72">The special case is illustrated by the following example:</p>
+<pre><code class="fenced-code-block language-c">mov rax<span class="token punctuation">,</span> <span class="token number">0x1234567812345678</span>
+mov eax<span class="token punctuation">,</span> <span class="token number">0x11111111</span></code></pre>
+<p _msttexthash="776815" _msthash="73">After running rax is 0x0000000011111111.</p>
+<p><u _msttexthash="198523" _msthash="74">CMP directive</u></p>
+<pre><code class="fenced-code-block language-c"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>instructionFunc <span class="token operator">==</span> Cmp <span class="token operator">||</span> instructionFunc <span class="token operator">==</span> Test<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>instructionFunc<span class="token punctuation">)</span><span class="token punctuation">(</span>opBit1<span class="token punctuation">,</span> opAddr1<span class="token punctuation">,</span> opAddr2<span class="token punctuation">,</span> pVtRegs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p _msttexthash="10066303" _msthash="75">Assign the values of the two operands to r10 and r11, and assign the values of the flag registers to vtEFL after the calculation is complete.</p>
+<pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Cmp</span><span class="token punctuation">(</span><span class="token keyword">char</span> opBit1<span class="token punctuation">,</span> DWORD_PTR opAddr1<span class="token punctuation">,</span> DWORD_PTR opAddr2<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    __asm <span class="token punctuation">{</span>
+        mov r8<span class="token punctuation">,</span> qword ptr<span class="token punctuation">[</span>opAddr1<span class="token punctuation">]</span>
+        mov r9<span class="token punctuation">,</span> qword ptr<span class="token punctuation">[</span>opAddr2<span class="token punctuation">]</span>
+        mov r10<span class="token punctuation">,</span> qword ptr<span class="token punctuation">[</span>r8<span class="token punctuation">]</span>
+        mov r11<span class="token punctuation">,</span> qword ptr<span class="token punctuation">[</span>r9<span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+    DWORD_PTR vtEFL<span class="token punctuation">;</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>opBit1<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token char">'q'</span><span class="token operator">:</span>
+        __asm <span class="token punctuation">{</span>
+            cmp r10<span class="token punctuation">,</span> r11
+            pushf
+            pop rax
+            mov vtEFL<span class="token punctuation">,</span> rax
+        <span class="token punctuation">}</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token punctuation">}</span>
+    pVtRegs<span class="token punctuation">[</span><span class="token number">17</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtEFL<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><u _msttexthash="192439" _msthash="76">JCC Directive</u></p>
+<p _msttexthash="1466400" _msthash="77">A handler pointer to a specific JCC instruction.</p>
+<pre><code class="fenced-code-block language-c"><span class="token function">Jcc</span><span class="token punctuation">(</span>instructionFunc<span class="token punctuation">,</span> opAddr1<span class="token punctuation">,</span> pVtRegs<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p _msttexthash="9214959" _msthash="78">Use the handler of the specific Jcc instruction to determine whether to jump. If it jumps, the value of operand 1 is assigned to vtRIP.</p>
+<pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Jcc</span><span class="token punctuation">(</span>PVOID instructionFunc<span class="token punctuation">,</span> DWORD_PTR opAddr1<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    DWORD_PTR vtEFL <span class="token operator">=</span> pVtRegs<span class="token punctuation">[</span><span class="token number">17</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> isJmp <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>instructionFunc<span class="token punctuation">)</span><span class="token punctuation">(</span>vtEFL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>isJmp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        DWORD_PTR vtRIP <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span>opAddr1<span class="token punctuation">;</span>
+        pVtRegs<span class="token punctuation">[</span><span class="token number">16</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtRIP<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><u _msttexthash="172757" _msthash="79">JE Directive</u></p>
+<p _msttexthash="10893246" _msthash="80">As a handler for specific Jcc instructions, the value of vtEFL is assigned to the flag register first, and then it is determined whether to jump.</p>
+<pre><code class="fenced-code-block language-c"><span class="token keyword">int</span> <span class="token function">Je</span><span class="token punctuation">(</span>DWORD_PTR vtEFL<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> isJmp <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    __asm <span class="token punctuation">{</span>
+        mov rax<span class="token punctuation">,</span> vtEFL
+        push rax
+        popf
+        je jmp
+        mov isJmp<span class="token punctuation">,</span> <span class="token number">0x00</span>
+        jmp <span class="token operator">:</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> isJmp<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><u _msttexthash="230386" _msthash="81">Call directive</u></p>
+<p _msttexthash="5888350" _msthash="82">The implementation is the most complex of all the instructions, as it involves calls to the Windows API.</p>
+<p _msttexthash="12369799" _msthash="83">First, save the real top and bottom of the stack, and finally restore the real top and bottom of the stack to ensure that the interpreter can run normally.</p>
+<p _msttexthash="19641830" _msthash="84">Before calling the Windows API, you need to overwrite the value of the virtual register with the value of the real register, which is equivalent to constructing the parameters of the Windows API.</p>
+<p _msttexthash="7327762" _msthash="85">Once you've called the Windows API, overwrite the value of the virtual register with the value of the real register.</p>
+<pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Call</span><span class="token punctuation">(</span>DWORD_PTR opAddr1<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 保存真实栈顶栈底</span>
+    DWORD_PTR realRSP<span class="token punctuation">;</span>
+    DWORD_PTR realRBP<span class="token punctuation">;</span>
+    __asm <span class="token punctuation">{</span>
+        mov realRSP<span class="token punctuation">,</span> rsp
+        mov realRBP<span class="token punctuation">,</span> rbp
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// Window API 地址</span>
+    DWORD_PTR winApiAddr <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span>opAddr1<span class="token punctuation">;</span>
+
+    <span class="token comment">// 虚拟寄存器 覆盖 真实寄存器</span>
+    DWORD_PTR vtRAX <span class="token operator">=</span> pVtRegs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    DWORD_PTR vtRBP <span class="token operator">=</span> pVtRegs<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    __asm <span class="token punctuation">{</span>
+        mov rax<span class="token punctuation">,</span> vtRAX
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        mov rsp<span class="token punctuation">,</span> vtRSP
+        <span class="token comment">// mov rbp, vtRBP (与 Call 冲突)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 调用 Windows API</span>
+    __asm <span class="token punctuation">{</span>
+        call qword ptr<span class="token punctuation">[</span>winApiAddr<span class="token punctuation">]</span> <span class="token comment">// (call qword ptr [rbp])</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 保存调用 Windows API 后真实寄存器的值</span>
+    __asm <span class="token punctuation">{</span>
+        push rax
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        push rbp
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 真实寄存器 覆盖 虚拟寄存器</span>
+    DWORD_PTR currentRSP<span class="token punctuation">;</span>
+    __asm <span class="token punctuation">{</span>
+        mov currentRSP<span class="token punctuation">,</span> rsp<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    pVtRegs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">(</span>currentRSP <span class="token operator">+</span> <span class="token number">0x78</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RAX</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    pVtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">(</span>currentRSP <span class="token operator">+</span> <span class="token number">0x08</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">0x70</span><span class="token punctuation">;</span> <span class="token comment">// RSP</span>
+    pVtRegs<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">(</span>currentRSP <span class="token operator">+</span> <span class="token number">0x00</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RBP</span>
+
+    <span class="token comment">// 还原真实栈顶栈底</span>
+    __asm <span class="token punctuation">{</span>
+        mov rsp<span class="token punctuation">,</span> realRSP
+        mov rbp<span class="token punctuation">,</span> realRBP
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+</article>
+
+
+</body></html>
