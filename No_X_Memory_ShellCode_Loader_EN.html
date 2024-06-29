@@ -1,4 +1,4 @@
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-239d2961-03ef-48ed-a1bf-6c387f9ea425@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-b82a53e7-f6b3-49d8-9012-83e0de97712f@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-8601388c-d0ed-451b-b208-cb5363adc927@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-9edfd565-264c-46c8-ace1-e0b712c3211d@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-3313b6ae-d1db-4dee-8b43-504a80b812e6@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-4fe4295f-17c4-4171-906e-be2145ebfc05@mhtml.blink">
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-13f8f6be-3936-4b88-beb4-1cedfd531cbc@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-1ac0d090-ce67-4184-99d6-b5990dc6c0c0@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-0262077f-e4f3-4a00-a58c-30b4cb59cb92@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-e3e85a09-47e0-4b54-a21b-5545f3bfec59@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-d27a21fe-bfad-4a88-a1f3-4a1161cf17d5@mhtml.blink"><link rel="stylesheet" type="text/css" href="cid:css-97f4e9d6-fa75-4342-9340-be68ff48ced1@mhtml.blink">
   
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
@@ -38,12 +38,13 @@
 <p _msttexthash="1501409" _msthash="25"><u _istranslated="1">Converter</u>: Custom assembly command converter.</p>
 <pre><code class="fenced-code-block language-bash">pip <span class="token function">install</span> capstone</code></pre>
 <p _msttexthash="3032653" _msthash="26"><u _istranslated="1">Loader</u>: ShellCode loader (custom assembly instruction interpreter).</p>
-<h3 class="atx" id="5-转换器实现" _msttexthash="654173" _msthash="27">5. Converter implementation</h3>
-<p _msttexthash="9943310" _msthash="28">To alleviate the pressure on the interpreter, our custom assembly instructions must be designed in a format that is easy to interpret.</p>
-<p><mark _msttexthash="5261802" _msthash="29">The following is an example of executing ShellCode with the CMD command provided in this project:</mark></p>
-<p><strong _msttexthash="1609946" _msthash="30">(1) Generate the original assembly instructions</strong></p>
-<p _msttexthash="5671926" _msthash="31">Convert the ShellCode machine code (ShellCode.txt) to the original assembly instruction (asm.txt).</p>
-<p _msttexthash="2473406" _msthash="32">This feature is simply implemented using the Capstone library.</p>
+<p _msttexthash="1967004" _msthash="27"><u _istranslated="1">Interpreter ShellCode</u>: Interpreter ShellCode Edition.</p>
+<h3 class="atx" id="5-转换器实现" _msttexthash="654173" _msthash="28">5. Converter implementation</h3>
+<p _msttexthash="9943310" _msthash="29">To alleviate the pressure on the interpreter, our custom assembly instructions must be designed in a format that is easy to interpret.</p>
+<p><mark _msttexthash="5261802" _msthash="30">The following is an example of executing ShellCode with the CMD command provided in this project:</mark></p>
+<p><strong _msttexthash="1609946" _msthash="31">(1) Generate the original assembly instructions</strong></p>
+<p _msttexthash="5671926" _msthash="32">Convert the ShellCode machine code (ShellCode.txt) to the original assembly instruction (asm.txt).</p>
+<p _msttexthash="2473406" _msthash="33">This feature is simply implemented using the Capstone library.</p>
 <pre><code class="fenced-code-block language-bash"><span class="token operator">&gt;</span> python Converter.py
 <span class="token number">1</span>.反汇编
 <span class="token number">2</span>.Imul转换
@@ -51,22 +52,22 @@
 选择: <span class="token number">1</span>
 ShellCode使用的汇编指令: <span class="token punctuation">{</span><span class="token string">'lea'</span>, <span class="token string">'cdqe'</span>, <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>, <span class="token string">'repStosb'</span><span class="token punctuation">}</span>
 汇编指令生成完毕: asm.txt</code></pre>
-<p _msttexthash="11980124" _msthash="33">asm.txt：</p>
+<p _msttexthash="11980124" _msthash="34">asm.txt：</p>
 <pre><code class="fenced-code-block language-c"><span class="token number">0x0</span>_mov_qword ptr <span class="token punctuation">[</span>rsp <span class="token operator">+</span> <span class="token number">0x20</span><span class="token punctuation">]</span><span class="token punctuation">,</span> r9
 <span class="token number">0x5</span>_mov_qword ptr <span class="token punctuation">[</span>rsp <span class="token operator">+</span> <span class="token number">0x18</span><span class="token punctuation">]</span><span class="token punctuation">,</span> r8
 <span class="token number">0xa</span>_mov_dword ptr <span class="token punctuation">[</span>rsp <span class="token operator">+</span> <span class="token number">0x10</span><span class="token punctuation">]</span><span class="token punctuation">,</span> edx
 <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></code></pre>
-<p><strong _msttexthash="293579" _msthash="34">(2) Modify asm.txt</strong></p>
-<p _msttexthash="37952304" _msthash="35">Amendments need to be made to take into account that there may be some special circumstances in the original assembly directive. So I divided the conversion process into two stages: first to the original assembly instruction and then to the custom assembly instruction.</p>
-<p _msttexthash="21021767" _msthash="36">Looking at the original assembly instructions, we can see that there are imul instructions, and they are all in the format of imul a, a, b. Let's just convert them all to imul a, b format for easy processing.</p>
+<p><strong _msttexthash="293579" _msthash="35">(2) Modify asm.txt</strong></p>
+<p _msttexthash="37952304" _msthash="36">Amendments need to be made to take into account that there may be some special circumstances in the original assembly directive. So I divided the conversion process into two stages: first to the original assembly instruction and then to the custom assembly instruction.</p>
+<p _msttexthash="21021767" _msthash="37">Looking at the original assembly instructions, we can see that there are imul instructions, and they are all in the format of imul a, a, b. Let's just convert them all to imul a, b format for easy processing.</p>
 <pre><code class="fenced-code-block language-bash"><span class="token operator">&gt;</span> python Converter.py
 <span class="token number">1</span>.反汇编
 <span class="token number">2</span>.Imul转换
 <span class="token number">3</span>.生成自定义汇编指令
 选择: <span class="token number">2</span>
 已将 asm.txt 中的 imul a, a, b 全部转换为 imul a, b</code></pre>
-<p><strong _msttexthash="1295125" _msthash="37">(3) Generate custom assembly instructions</strong></p>
-<p _msttexthash="4535882" _msthash="38">Converts the original assembly directive in the asm.txt to a custom assembly directive.</p>
+<p><strong _msttexthash="1295125" _msthash="38">(3) Generate custom assembly instructions</strong></p>
+<p _msttexthash="4535882" _msthash="39">Converts the original assembly directive in the asm.txt to a custom assembly directive.</p>
 <pre><code class="fenced-code-block language-bash"><span class="token operator">&gt;</span> python Converter.py
 <span class="token number">1</span>.反汇编
 <span class="token number">2</span>.Imul转换
@@ -75,32 +76,32 @@ ShellCode使用的汇编指令: <span class="token punctuation">{</span><span cl
 0_4_q_pq70+i20_q_q38_<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>2ed_3_q__q__<span class="token operator">!</span>
 
 PVOID mnemonicMapping<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> Push, Pop, <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>, Jle <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
-<p _msttexthash="8318583" _msthash="39">0_4_q_pq70+i20_q_q38 for the first custom assembly directive,! Customize the end flag for the entire assembly directive.</p>
-<p _msttexthash="4150835" _msthash="40">The original assembly directive for the first article: 0x00 mov qword ptr [rsp + 0x20], r9</p>
-<p _msttexthash="500019" _msthash="41"><u _istranslated="1">Command address</u>: 0x00 ------&gt; 0</p>
-<p _msttexthash="4927078" _msthash="42">It needs to be used when dealing with JCC jump instructions, removing 0x to shorten the length.</p>
-<p _msttexthash="291330" _msthash="43"><u _istranslated="1">Mnemonic</u>: MOV ------&gt; 4</p>
-<p _msttexthash="1069003" _msthash="44">4 is the subscript of mov in mnemonicMap.</p>
-<p _msttexthash="28810067" _msthash="45">The interpreter executes instructions one by one, and obtains the handler pointer of the current instruction in mnemonicMap through subscripts to make reflection calls. Avoided a lot of if else or switch cases in the interpreter code.</p>
-<p _msttexthash="1174485" _msthash="46"><u _istranslated="1">Operand 1</u>: Qword PTR [RSP + 0x20] ------&gt; q_pq70 + I20</p>
-<p _msttexthash="953953" _msthash="47">q stands for QWORD and p stands for ptr.</p>
-<p _msttexthash="72251075" _msthash="48">q70 represents vtRSP. The value of the virtual register is stored in the interpreter via an array of vtRegs, 70 is the offset of the vtRSP relative to the base address of the vtRegs, and the value of the register is manipulated directly from the address. Eliminates the need for a large number of registers with different digits in the interpreter code, as well as tedious operations.</p>
-<p _msttexthash="544869" _msthash="49">i20 means 0x20 immediately.</p>
-<p _msttexthash="261391" _msthash="50"><u _istranslated="1">Op. 2</u>: R9 ------&gt; q_q38</p>
-<p _msttexthash="273923" _msthash="51">q stands for QWORD.</p>
-<p _msttexthash="833560" _msthash="52">q38 represents R9, the same is true.</p>
-<h3 class="atx" id="6-解释器实现" _msttexthash="745979" _msthash="53">6. Interpreter implementation</h3>
-<p><strong _msttexthash="1539889" _msthash="54">(1) Create virtual stacks and virtual registers</strong></p>
+<p _msttexthash="8318583" _msthash="40">0_4_q_pq70+i20_q_q38 for the first custom assembly directive,! Customize the end flag for the entire assembly directive.</p>
+<p _msttexthash="4150835" _msthash="41">The original assembly directive for the first article: 0x00 mov qword ptr [rsp + 0x20], r9</p>
+<p _msttexthash="500019" _msthash="42"><u _istranslated="1">Command address</u>: 0x00 ------&gt; 0</p>
+<p _msttexthash="4927078" _msthash="43">It needs to be used when dealing with JCC jump instructions, removing 0x to shorten the length.</p>
+<p _msttexthash="291330" _msthash="44"><u _istranslated="1">Mnemonic</u>: MOV ------&gt; 4</p>
+<p _msttexthash="1069003" _msthash="45">4 is the subscript of mov in mnemonicMap.</p>
+<p _msttexthash="28810067" _msthash="46">The interpreter executes instructions one by one, and obtains the handler pointer of the current instruction in mnemonicMap through subscripts to make reflection calls. Avoided a lot of if else or switch cases in the interpreter code.</p>
+<p _msttexthash="1174485" _msthash="47"><u _istranslated="1">Operand 1</u>: Qword PTR [RSP + 0x20] ------&gt; q_pq70 + I20</p>
+<p _msttexthash="953953" _msthash="48">q stands for QWORD and p stands for ptr.</p>
+<p _msttexthash="72251075" _msthash="49">q70 represents vtRSP. The value of the virtual register is stored in the interpreter via an array of vtRegs, 70 is the offset of the vtRSP relative to the base address of the vtRegs, and the value of the register is manipulated directly from the address. Eliminates the need for a large number of registers with different digits in the interpreter code, as well as tedious operations.</p>
+<p _msttexthash="544869" _msthash="50">i20 means 0x20 immediately.</p>
+<p _msttexthash="261391" _msthash="51"><u _istranslated="1">Op. 2</u>: R9 ------&gt; q_q38</p>
+<p _msttexthash="273923" _msthash="52">q stands for QWORD.</p>
+<p _msttexthash="833560" _msthash="53">q38 represents R9, the same is true.</p>
+<h3 class="atx" id="6-解释器实现" _msttexthash="745979" _msthash="54">6. Interpreter implementation</h3>
+<p><strong _msttexthash="1539889" _msthash="55">(1) Create virtual stacks and virtual registers</strong></p>
 <pre><code class="fenced-code-block language-c">PVOID vtStack <span class="token operator">=</span> <span class="token function">malloc</span><span class="token punctuation">(</span><span class="token number">0x10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 DWORD_PTR vtRegs<span class="token punctuation">[</span><span class="token number">18</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
 vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtRegs<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>vtStack <span class="token operator">+</span> <span class="token number">0x9000</span><span class="token punctuation">;</span></code></pre>
-<p _msttexthash="1744860" _msthash="55">14 and 15 correspond to vtRSP and vtRBP, respectively.</p>
-<p><strong _msttexthash="1536782" _msthash="56">(2) Set the initial value of the virtual register</strong></p>
-<p _msttexthash="19666166" _msthash="57">Because the interpreter is simulated from the beginning of the ShellCode function, the parameters of the ShellCode function are constructed in the virtual space before the simulation begins.</p>
-<p _msttexthash="6056063" _msthash="58">The CMD command provided by this project executes the ShellCode function by calling the following code:</p>
+<p _msttexthash="1744860" _msthash="56">14 and 15 correspond to vtRSP and vtRBP, respectively.</p>
+<p><strong _msttexthash="1536782" _msthash="57">(2) Set the initial value of the virtual register</strong></p>
+<p _msttexthash="19666166" _msthash="58">Because the interpreter is simulated from the beginning of the ShellCode function, the parameters of the ShellCode function are constructed in the virtual space before the simulation begins.</p>
+<p _msttexthash="6056063" _msthash="59">The CMD command provided by this project executes the ShellCode function by calling the following code:</p>
 <pre><code class="fenced-code-block language-c"><span class="token function">ExecuteCmd</span><span class="token punctuation">(</span>commandPara<span class="token punctuation">,</span> commandParaLength<span class="token punctuation">,</span> <span class="token operator">&amp;</span>outputData<span class="token punctuation">,</span> <span class="token operator">&amp;</span>outputDataLength<span class="token punctuation">,</span> funcAddr<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p _msttexthash="2157272" _msthash="59">The assembly directive corresponding to this line of code:</p>
+<p _msttexthash="2157272" _msthash="60">The assembly directive corresponding to this line of code:</p>
 <pre><code class="fenced-code-block language-c">lea rax<span class="token punctuation">,</span> <span class="token punctuation">[</span>funcAddr<span class="token punctuation">]</span>
 mov qword ptr <span class="token punctuation">[</span>rsp<span class="token operator">+</span><span class="token number">20</span>h<span class="token punctuation">]</span><span class="token punctuation">,</span> rax
 lea r9<span class="token punctuation">,</span> <span class="token punctuation">[</span>outputDataLength<span class="token punctuation">]</span>
@@ -108,7 +109,7 @@ lea r8<span class="token punctuation">,</span> <span class="token punctuation">[
 mov edx<span class="token punctuation">,</span> dword ptr <span class="token punctuation">[</span>commandParaLength<span class="token punctuation">]</span>
 lea rcx<span class="token punctuation">,</span> <span class="token punctuation">[</span>commandPara<span class="token punctuation">]</span>
 call ExecuteCmd</code></pre>
-<p _msttexthash="4564586" _msthash="60">So you need to build the function parameters in the virtual space with the following code:</p>
+<p _msttexthash="4564586" _msthash="61">So you need to build the function parameters in the virtual space with the following code:</p>
 <pre><code class="fenced-code-block language-c">vtRegs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pFuncAddr<span class="token punctuation">;</span>
 <span class="token operator">*</span><span class="token punctuation">(</span>PDWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">(</span>vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">0x20</span><span class="token punctuation">)</span> <span class="token operator">=</span> vtRegs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 vtRegs<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pOutputDataLength<span class="token punctuation">;</span>
@@ -116,12 +117,12 @@ vtRegs<span class="token punctuation">[</span><span class="token number">6</span
 vtRegs<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> commandParaLength<span class="token punctuation">;</span>
 vtRegs<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>commandPara<span class="token punctuation">;</span>
 vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtRegs<span class="token punctuation">[</span><span class="token number">14</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p><strong _msttexthash="1237353" _msthash="61">(3) Parsing custom assembly instructions</strong></p>
-<p _msttexthash="11731278" _msthash="62">The elements of each instruction are parsed according to the format of <mark _istranslated="1">Instruction Address_Mnemonic_Bit 1_Omannamon 1_Number of Digits 2_ Operand 2</mark>.</p>
-<p _msttexthash="26213733" _msthash="63">The type and address of each operand can be obtained through the GetOpTypeAndAddr function, and the handler of each instruction will directly operate on its value through the address of the operand, which is very convenient.</p>
-<p _msttexthash="16875378" _msthash="64"><u _istranslated="1">If the operand is immediate</u>, for example, i12 (0x12). The 12 strings are converted to numbers through the strtol function, and the address of the number is the address of the operand.</p>
-<p _msttexthash="67787226" _msthash="65"><u _istranslated="1">If the operand is the second operand or memory space of the LEA</u>, for example, LQ70+i20 ([rsp + 0x20]) or pq70+i20 (PTR [rsp + 0x20]). The child element is parsed first, and the result is saved to number1. If the operand is the second operand of LEA, the address of number1 is the address of the operand. If the operand is memory space, the value of number1 is the address of the operand.</p>
-<p _msttexthash="13375583" _msthash="66"><u _istranslated="1">If the operand is a register</u>, e.g. Q70 (RSP). 70 is the offset of vtRSP relative to the vtRegs base address, then vtRegs base address + 70 is the address of the operand.</p>
+<p><strong _msttexthash="1237353" _msthash="62">(3) Parsing custom assembly instructions</strong></p>
+<p _msttexthash="11731278" _msthash="63">The elements of each instruction are parsed according to the format of <mark _istranslated="1">Instruction Address_Mnemonic_Bit 1_Omannamon 1_Number of Digits 2_ Operand 2</mark>.</p>
+<p _msttexthash="26213733" _msthash="64">The type and address of each operand can be obtained through the GetOpTypeAndAddr function, and the handler of each instruction will directly operate on its value through the address of the operand, which is very convenient.</p>
+<p _msttexthash="16875378" _msthash="65"><u _istranslated="1">If the operand is immediate</u>, for example, i12 (0x12). The 12 strings are converted to numbers through the strtol function, and the address of the number is the address of the operand.</p>
+<p _msttexthash="67787226" _msthash="66"><u _istranslated="1">If the operand is the second operand or memory space of the LEA</u>, for example, LQ70+i20 ([rsp + 0x20]) or pq70+i20 (PTR [rsp + 0x20]). The child element is parsed first, and the result is saved to number1. If the operand is the second operand of LEA, the address of number1 is the address of the operand. If the operand is memory space, the value of number1 is the address of the operand.</p>
+<p _msttexthash="13375583" _msthash="67"><u _istranslated="1">If the operand is a register</u>, e.g. Q70 (RSP). 70 is the offset of vtRSP relative to the vtRegs base address, then vtRegs base address + 70 is the address of the operand.</p>
 <pre><code class="fenced-code-block language-c"><span class="token comment">// 获取操作数值的 类型(r寄存器/m内存空间) + 地址</span>
 DWORD_PTR <span class="token function">GetOpTypeAndAddr</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> op<span class="token punctuation">,</span> <span class="token keyword">char</span><span class="token operator">*</span> pOpType1<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">,</span> PDWORD_PTR opNumber<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
@@ -157,12 +158,12 @@ DWORD_PTR <span class="token function">GetOpTypeAndAddr</span><span class="token
         <span class="token keyword">return</span> <span class="token punctuation">(</span>DWORD_PTR<span class="token punctuation">)</span>pVtRegs <span class="token operator">+</span> <span class="token function">strtol</span><span class="token punctuation">(</span>op <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>endPtr<span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p><strong _msttexthash="1888172" _msthash="67">(4) Call the handler of the corresponding instruction</strong></p>
-<p _msttexthash="7187141" _msthash="68">The handler pointer of the current instruction is obtained by parsing the subscript of the current instruction.</p>
+<p><strong _msttexthash="1888172" _msthash="68">(4) Call the handler of the corresponding instruction</strong></p>
+<p _msttexthash="7187141" _msthash="69">The handler pointer of the current instruction is obtained by parsing the subscript of the current instruction.</p>
 <pre><code class="fenced-code-block language-c">PVOID mnemonicMapping<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> Push<span class="token punctuation">,</span> Pop<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> Jle <span class="token punctuation">}</span><span class="token punctuation">;</span>
 PVOID instructionFunc <span class="token operator">=</span> mnemonicMapping<span class="token punctuation">[</span>mnemonicIndex<span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
-<p><mark _msttexthash="2160210" _msthash="69">Here are some examples of handlers for several directives:</mark></p>
-<p><u _msttexthash="200343" _msthash="70">MOV directive</u></p>
+<p><mark _msttexthash="2160210" _msthash="70">Here are some examples of handlers for several directives:</mark></p>
+<p><u _msttexthash="200343" _msthash="71">MOV directive</u></p>
 <pre><code class="fenced-code-block language-c"><span class="token comment">// 其他两个操作数的指令</span>
 <span class="token keyword">else</span> <span class="token punctuation">{</span>
     <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>instructionFunc<span class="token punctuation">)</span><span class="token punctuation">(</span>opType1<span class="token punctuation">,</span> opBit1<span class="token punctuation">,</span> opAddr1<span class="token punctuation">,</span> opBit2<span class="token punctuation">,</span> opAddr2<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -189,16 +190,16 @@ PVOID instructionFunc <span class="token operator">=</span> mnemonicMapping<span
         <span class="token keyword">break</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p _msttexthash="6263686" _msthash="71">case 'd' indicates that operand 1 is DWORD, and there is a special case when operand 1 is of type DWORD register.</p>
-<p _msttexthash="2085889" _msthash="72">The special case is illustrated by the following example:</p>
+<p _msttexthash="6263686" _msthash="72">case 'd' indicates that operand 1 is DWORD, and there is a special case when operand 1 is of type DWORD register.</p>
+<p _msttexthash="2085889" _msthash="73">The special case is illustrated by the following example:</p>
 <pre><code class="fenced-code-block language-c">mov rax<span class="token punctuation">,</span> <span class="token number">0x1234567812345678</span>
 mov eax<span class="token punctuation">,</span> <span class="token number">0x11111111</span></code></pre>
-<p _msttexthash="776815" _msthash="73">After running rax is 0x0000000011111111.</p>
-<p><u _msttexthash="198523" _msthash="74">CMP directive</u></p>
+<p _msttexthash="776815" _msthash="74">After running rax is 0x0000000011111111.</p>
+<p><u _msttexthash="198523" _msthash="75">CMP directive</u></p>
 <pre><code class="fenced-code-block language-c"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>instructionFunc <span class="token operator">==</span> Cmp <span class="token operator">||</span> instructionFunc <span class="token operator">==</span> Test<span class="token punctuation">)</span> <span class="token punctuation">{</span>
      <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>instructionFunc<span class="token punctuation">)</span><span class="token punctuation">(</span>opBit1<span class="token punctuation">,</span> opAddr1<span class="token punctuation">,</span> opAddr2<span class="token punctuation">,</span> pVtRegs<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p _msttexthash="10066303" _msthash="75">Assign the values of the two operands to r10 and r11, and assign the values of the flag registers to vtEFL after the calculation is complete.</p>
+<p _msttexthash="10066303" _msthash="76">Assign the values of the two operands to r10 and r11, and assign the values of the flag registers to vtEFL after the calculation is complete.</p>
 <pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Cmp</span><span class="token punctuation">(</span><span class="token keyword">char</span> opBit1<span class="token punctuation">,</span> DWORD_PTR opAddr1<span class="token punctuation">,</span> DWORD_PTR opAddr2<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     __asm <span class="token punctuation">{</span>
         mov r8<span class="token punctuation">,</span> qword ptr<span class="token punctuation">[</span>opAddr1<span class="token punctuation">]</span>
@@ -221,10 +222,10 @@ mov eax<span class="token punctuation">,</span> <span class="token number">0x111
     <span class="token punctuation">}</span>
     pVtRegs<span class="token punctuation">[</span><span class="token number">17</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtEFL<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p><u _msttexthash="192439" _msthash="76">JCC Directive</u></p>
-<p _msttexthash="1466400" _msthash="77">A handler pointer to a specific JCC instruction.</p>
+<p><u _msttexthash="192439" _msthash="77">JCC Directive</u></p>
+<p _msttexthash="1466400" _msthash="78">A handler pointer to a specific JCC instruction.</p>
 <pre><code class="fenced-code-block language-c"><span class="token function">Jcc</span><span class="token punctuation">(</span>instructionFunc<span class="token punctuation">,</span> opAddr1<span class="token punctuation">,</span> pVtRegs<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p _msttexthash="9214959" _msthash="78">Use the handler of the specific Jcc instruction to determine whether to jump. If it jumps, the value of operand 1 is assigned to vtRIP.</p>
+<p _msttexthash="9214959" _msthash="79">Use the handler of the specific Jcc instruction to determine whether to jump. If it jumps, the value of operand 1 is assigned to vtRIP.</p>
 <pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Jcc</span><span class="token punctuation">(</span>PVOID instructionFunc<span class="token punctuation">,</span> DWORD_PTR opAddr1<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     DWORD_PTR vtEFL <span class="token operator">=</span> pVtRegs<span class="token punctuation">[</span><span class="token number">17</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
     <span class="token keyword">int</span> isJmp <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>instructionFunc<span class="token punctuation">)</span><span class="token punctuation">(</span>vtEFL<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -233,8 +234,8 @@ mov eax<span class="token punctuation">,</span> <span class="token number">0x111
         pVtRegs<span class="token punctuation">[</span><span class="token number">16</span><span class="token punctuation">]</span> <span class="token operator">=</span> vtRIP<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<p><u _msttexthash="172757" _msthash="79">JE Directive</u></p>
-<p _msttexthash="10893246" _msthash="80">As a handler for specific Jcc instructions, the value of vtEFL is assigned to the flag register first, and then it is determined whether to jump.</p>
+<p><u _msttexthash="172757" _msthash="80">JE Directive</u></p>
+<p _msttexthash="10893246" _msthash="81">As a handler for specific Jcc instructions, the value of vtEFL is assigned to the flag register first, and then it is determined whether to jump.</p>
 <pre><code class="fenced-code-block language-c"><span class="token keyword">int</span> <span class="token function">Je</span><span class="token punctuation">(</span>DWORD_PTR vtEFL<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">int</span> isJmp <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
     __asm <span class="token punctuation">{</span>
@@ -247,11 +248,11 @@ mov eax<span class="token punctuation">,</span> <span class="token number">0x111
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> isJmp<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p><u _msttexthash="230386" _msthash="81">Call directive</u></p>
-<p _msttexthash="5888350" _msthash="82">The implementation is the most complex of all the instructions, as it involves calls to the Windows API.</p>
-<p _msttexthash="12369799" _msthash="83">First, save the real top and bottom of the stack, and finally restore the real top and bottom of the stack to ensure that the interpreter can run normally.</p>
-<p _msttexthash="19641830" _msthash="84">Before calling the Windows API, you need to overwrite the value of the virtual register with the value of the real register, which is equivalent to constructing the parameters of the Windows API.</p>
-<p _msttexthash="7327762" _msthash="85">Once you've called the Windows API, overwrite the value of the virtual register with the value of the real register.</p>
+<p><u _msttexthash="230386" _msthash="82">Call directive</u></p>
+<p _msttexthash="5888350" _msthash="83">The implementation is the most complex of all the instructions, as it involves calls to the Windows API.</p>
+<p _msttexthash="12369799" _msthash="84">First, save the real top and bottom of the stack, and finally restore the real top and bottom of the stack to ensure that the interpreter can run normally.</p>
+<p _msttexthash="19641830" _msthash="85">Before calling the Windows API, you need to overwrite the value of the virtual register with the value of the real register, which is equivalent to constructing the parameters of the Windows API.</p>
+<p _msttexthash="7327762" _msthash="86">Once you've called the Windows API, overwrite the value of the virtual register with the value of the real register.</p>
 <pre><code class="fenced-code-block language-c"><span class="token keyword">void</span> <span class="token function">Call</span><span class="token punctuation">(</span>DWORD_PTR opAddr1<span class="token punctuation">,</span> PDWORD_PTR pVtRegs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment">// 保存真实栈顶栈底</span>
     DWORD_PTR realRSP<span class="token punctuation">;</span>
