@@ -1249,98 +1249,95 @@ pre[class*="language-"] {
   <article class="markdown-body"><h3 class="atx" id="lessmarkgreatertranslated-by-edgelessmarkgreater"><mark _msttexthash="320216" _msthash="0">Translated by Edge.</mark></h3>
 <h1 class="atx" id="magic_c2" _msttexthash="92196" _msthash="1">Magic_C2</h1>
 <h3 class="atx" id="1-介绍" _msttexthash="253045" _msthash="2">1. Introduction</h3>
-<p _msttexthash="506987" _msthash="3">Version: Magic C2 v0.1.0 Demo</p>
+<p _msttexthash="503321" _msthash="3">Version: Magic C2 v1.0.0 Beta</p>
 <p _msttexthash="1739179" _msthash="4">Project: <a href="https://github.com/HackerCalico/Magic_C2" _istranslated="1">https://github.com/HackerCalico/Magic_C2</a></p>
 <p _msttexthash="5282797" _msthash="5">I believe that every hacker has their own dreams! One of them is to have my own C2 because it's so cool!</p>
-<p _msttexthash="27551589" _msthash="6">Because of this year's extremely busy year, it was only in the last month that I took time out of my busy schedule to complete the demo version of this project. It's still a long way from a full-fledged C2 framework, but it's already great!</p>
+<p _msttexthash="36159123" _msthash="6">In the Issues section of the initial release, I saw a lot of feedback from you. So I carried out a wide range of rectification and optimization in the past two weeks, and finally got this version. It's still a long way from a full-fledged C2 framework, but it's already great!</p>
 <p><img alt="Screenshot 2024-07-17 175750.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/1.png" _mstalt="10831743" _msthash="7"></p>
 <h3 class="atx" id="2-项目亮点" _msttexthash="402467" _msthash="8">2. Project Highlights</h3>
 <p><mark _msttexthash="605436" _msthash="9">(1) Long-range anti-sandbox</mark></p>
-<p _msttexthash="17296214" _msthash="10">The backdoor is first in the "pending" stage, and users can remotely view the sandbox detection data and then remotely decide whether the backdoor enters the "official launch" stage.</p>
-<p _msttexthash="8335366" _msthash="11">After entering the "official go-live" stage, the server will send the core ShellCode key to the backdoor to decrypt and load.</p>
-<p><img alt="1.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/2.png" _mstalt="51376" _msthash="12"></p>
-<p _msttexthash="504621" _msthash="13">Advantages of avoidance:</p>
+<p _msttexthash="34748142" _msthash="10">The ShellCode Loader of the backdoor itself has a communication function, and users can remotely view the sandbox detection data and then remotely decide whether the backdoor will move from the "pending" stage to the "official go-live" stage, as shown in Figure 1.</p>
+<p _msttexthash="7435168" _msthash="11">After entering the "official go-live" stage, the server will send a ShellCode key to the backdoor to decrypt and load.</p>
+<p _msttexthash="504621" _msthash="12">Advantages of avoidance:</p>
 <ol>
-<li><p _msttexthash="8830094" _msthash="14">Even if data is transmitted that is not related to sandbox detection, the duration can be used to bypass some sandbox detection.</p>
+<li><p _msttexthash="8830094" _msthash="13">Even if data is transmitted that is not related to sandbox detection, the duration can be used to bypass some sandbox detection.</p>
 </li>
-<li><p _msttexthash="19317896" _msthash="15">Because it is manually determined, the sandbox detection data can be more flexible than the conventional method, for example, the file directory under a certain disk is obtained in the figure.</p>
+<li><p _msttexthash="17570670" _msthash="14">Because it is a manual decision, the sandbox detection data can be more flexible than the conventional method, for example, the screenshot of the target host is obtained in the figure.</p>
 </li>
-<li><p _msttexthash="14524224" _msthash="16">The core ShellCode key is sent by the server, and the ShellCode plaintext cannot be obtained by skipping the anti-sandbox stage in a simple way during virus analysis.</p>
+<li><p _msttexthash="10736843" _msthash="15">The ShellCode key is sent by the server, and the ShellCode plaintext cannot be obtained by skipping the anti-sandbox stage in virus analysis.</p>
 </li>
 </ol>
-<p><mark _msttexthash="893620" _msthash="17">(2) Covert ShellCode call interface</mark></p>
-<p _msttexthash="9836112" _msthash="18">This project combines <u _istranslated="1">No_X_Memory_ShellCode_Loader</u> technology: <a href="https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader" _istranslated="1">https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader</a></p>
-<p _msttexthash="4419571" _msthash="19">The core ShellCode above is actually the ShellCode of the "Custom Assembly Interpreter".</p>
-<p _msttexthash="7701226" _msthash="20">All non-communication features after the backdoor enters the "official live" phase are run through the interpreter:</p>
+<p><mark _msttexthash="893620" _msthash="16">(2) Covert ShellCode call interface</mark></p>
+<p _msttexthash="9836112" _msthash="17">This project combines <u _istranslated="1">No_X_Memory_ShellCode_Loader</u> technology: <a href="https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader" _istranslated="1">https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader</a></p>
+<p _msttexthash="10083411" _msthash="18">All non-communication features after the backdoor enters the "official live" phase are run through the "custom assembly interpreter":</p>
 <ol>
-<li><p _msttexthash="4546256" _msthash="21">The client converts the function ShellCode into a custom assembly directive ------&gt; server</p>
+<li><p _msttexthash="4792710" _msthash="19">The client converts the function ShellCode to a "custom assembly directive" ------&gt; the server</p>
 </li>
-<li><p _msttexthash="3849651" _msthash="22">The server-side ------&gt; backdoor runs the functionality through an interpreter</p>
+<li><p _msttexthash="2250092" _msthash="20">Server-side ------&gt; backdoor "custom assembly interpreter"</p>
 </li>
 </ol>
-<p _msttexthash="504621" _msthash="23">Advantages of avoidance:</p>
+<p _msttexthash="504621" _msthash="21">Advantages of avoidance:</p>
 <ol>
-<li><p _msttexthash="6916156" _msthash="24">Injecting any new functionality into the backdoor does not require any memory attribute (R/W/X) modifications.</p>
+<li><p _msttexthash="6916156" _msthash="22">Injecting any new functionality into the backdoor does not require any memory attribute (R/W/X) modifications.</p>
 </li>
-<li><p _msttexthash="4677049" _msthash="25">The ShellCode machine code for the new functionality will not appear in memory at any time.</p>
+<li><p _msttexthash="4677049" _msthash="23">The ShellCode machine code for the new functionality will not appear in memory at any time.</p>
 </li>
 </ol>
-<p><mark _msttexthash="706810" _msthash="26">(3) Unauthorized Access Notice</mark></p>
-<p _msttexthash="12587146" _msthash="27">When the server encounters invalid credentials or requests data, it will only respond with a blank/404 and notify all clients of the unauthorized access.</p>
-<p><img alt="4.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/3.png" _mstalt="51649" _msthash="28"></p>
-<p><mark _msttexthash="557934" _msthash="29">(4) Secondary development</mark></p>
-<p _msttexthash="7788339" _msthash="30">The project is completely open source, the code is concise, and no high-level syntax is used, which is easy to redevelop.</p>
-<h3 class="atx" id="3-环境配置" _msttexthash="699634" _msthash="31">3. Environment configuration</h3>
-<p><u _msttexthash="79482" _msthash="32">client</u></p>
-<p _msttexthash="905957" _msthash="33">Development language: C# WPF, Python 3</p>
-<p _msttexthash="16218566" _msthash="34">Operating Environment: Windows, Python 3, msbuild.exe (Add C:\Program Files\Microsoft Visual Studio\xxxx\Professional\MSBuild\Current\Bin to environment variables)</p>
-<p><u _msttexthash="171093" _msthash="35">Server-side</u></p>
-<p _msttexthash="501670" _msthash="36">Development language: Go</p>
-<p><u _msttexthash="115622" _msthash="37">back door</u></p>
-<p _msttexthash="951457" _msthash="38">Development language: C/C++, Assembly</p>
-<h3 class="atx" id="4-二次开发" _msttexthash="526006" _msthash="39">4. Secondary development</h3>
-<p><mark _msttexthash="467168" _msthash="40">(1) Plug-in development</mark></p>
-<p _msttexthash="2440659" _msthash="41">You can see all the plugins in the Client\config\script folder.</p>
+<p><mark _msttexthash="434577" _msthash="24">(3) Alarm notification</mark></p>
+<p _msttexthash="10693475" _msthash="25">When the server processes invalid credentials or request data, it will only respond with a blank/404 and alert all clients, as shown in Figure 1.</p>
+<p><mark _msttexthash="434421" _msthash="26">(4) Block file transfer</mark></p>
+<p _msttexthash="8392839" _msthash="27">File upload and download are transferred in chunks, and the size of the chunk can be paused, canceled, and modified at any time.</p>
+<p><img alt="7.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/2.png" _mstalt="51922" _msthash="28"></p>
+<p><mark _msttexthash="558038" _msthash="29">(5) Secondary development</mark></p>
+<p _msttexthash="11606114" _msthash="30">The project is completely open source, the code is concise, no high-level syntax is used, and the plug-ins are all Python, which is easy to redevelop.</p>
+<h3 class="atx" id="3-二次开发" _msttexthash="525915" _msthash="31">3. Secondary development</h3>
+<p><mark _msttexthash="467168" _msthash="32">(1) Plug-in development</mark></p>
+<p _msttexthash="1906008" _msthash="33">You can see all the plugins in the Client\script folder.</p>
 <pre><code class="fenced-code-block language-shell">Client
-<span class="token operator">|</span>— config
-    <span class="token operator">|</span>— script
-        <span class="token operator">|</span>— cmd
-        <span class="token operator">|</span>— <span class="token builtin class-name">help</span>
-        <span class="token operator">|</span>— GetFileInfoList_
-        <span class="token operator">|</span>— UploadFile_
-        <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span></code></pre>
-<p _msttexthash="5674240" _msthash="42">All plug-ins that do not end in "_" are plug-ins of the "Command Terminal" module, as shown in the figure.</p>
-<p _msttexthash="15211118" _msthash="43">Because all plugin functionality runs through the Custom Assembly Interpreter, you must learn <a href="https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader" _istranslated="1">https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader</a> first</p>
-<p _msttexthash="3193658" _msthash="44">For Python writing specifications, please refer to cmd and help plug-ins.</p>
-<p><img alt="2.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/4.png" _mstalt="51467" _msthash="45"></p>
-<p _msttexthash="7073651" _msthash="46">At present, the other plug-ins ending in "_" are all plug-ins of the "File Management" module, as shown in the figure.</p>
-<p><img alt="3.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/5.png" _mstalt="51558" _msthash="47"></p>
-<p><mark _msttexthash="513760" _msthash="48">(2) Backdoor development</mark></p>
-<p _msttexthash="4178811" _msthash="49">In the shell folder, you can see the source code project for the "HTTP reverse backdoor".</p>
+<span class="token operator">|</span>— script
+    <span class="token operator">|</span>— cmd
+    <span class="token operator">|</span>— inject
+    <span class="token operator">|</span>— <span class="token builtin class-name">help</span>
+    <span class="token operator">|</span>— GetFileInfoList_
+    <span class="token operator">|</span>— UploadFile_
+    <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span></code></pre>
+<p _msttexthash="5674240" _msthash="34">All plug-ins that do not end in "_" are plug-ins of the "Command Terminal" module, as shown in the figure.</p>
+<p _msttexthash="14593852" _msthash="35">All plugin functionality runs through the Custom Assembly Interpreter, so you have to learn <a href="https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader" _istranslated="1">https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader</a> first</p>
+<p _msttexthash="2699385" _msthash="36">For Python writing specifications, please refer to the cmd plugin.</p>
+<p><img alt="2.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/3.png" _mstalt="51467" _msthash="37"></p>
+<p _msttexthash="7073651" _msthash="38">At present, the other plug-ins ending in "_" are all plug-ins of the "File Management" module, as shown in the figure.</p>
+<p><img alt="3.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/4.png" _mstalt="51558" _msthash="39"></p>
+<p><mark _msttexthash="513760" _msthash="40">(2) Backdoor development</mark></p>
+<p _msttexthash="5504330" _msthash="41">In the Shell folder, you can see the source code items for "HTTP Reverse Shell" and "HTTP Reverse Loader".</p>
+<p _msttexthash="4214925" _msthash="42">"HTTP Reverse Shell" is a "Reflection DLL ShellCode" project with core functionality.</p>
+<p _msttexthash="6624124" _msthash="43">The "HTTP Reverse Loader" is its "ShellCode Loader" project, which includes the "Remote Anti-Sandbox" feature.</p>
 <pre><code class="fenced-code-block language-shell">Shell
 <span class="token operator">|</span>— HttpReverseShell
-    <span class="token operator">|</span>— HttpReverseShell.sln</code></pre>
-<p _msttexthash="13550030" _msthash="50">You can read the source code in conjunction with the "backdoor lifecycle", focusing on how to parse the "command data" and how to package the "command output data".</p>
-<p><img alt="Screenshot 2024-07-16 221608.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/6.png" _mstalt="10829897" _msthash="51"></p>
-<p><mark _msttexthash="558090" _msthash="52">(3) Generator development</mark></p>
-<p _msttexthash="9554870" _msthash="53">In the Shell\Generator folder you can see a NormalXor generator folder with a Generator.py and a Profile.txt in the NormalXor folder.</p>
+    <span class="token operator">|</span>— HttpReverseShell.sln
+<span class="token operator">|</span>— HttpReverseLoader
+    <span class="token operator">|</span>— HttpReverseLoader.sln</code></pre>
+<p _msttexthash="605124" _msthash="44">ShellCode Loader Lifecycle:</p>
+<p><img alt="Screenshot 2024-07-16 221607.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/5.png" _mstalt="10829559" _msthash="45"></p>
+<p _msttexthash="384345" _msthash="46">ShellCode Lifecycle:</p>
+<p><img alt="Screenshot 2024-07-16 221608.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/6.png" _mstalt="10829897" _msthash="47"></p>
+<p><mark _msttexthash="558090" _msthash="48">(3) Generator development</mark></p>
+<p _msttexthash="9554870" _msthash="49">In the Shell\Generator folder you can see a NormalXor generator folder with a Generator.py and a Profile.txt in the NormalXor folder.</p>
 <pre><code class="fenced-code-block language-shell">Shell
 <span class="token operator">|</span>— Generator
     <span class="token operator">|</span>— NormalXor
         <span class="token operator">|</span>— Generator.py
         <span class="token operator">|</span>— Profile.txt</code></pre>
-<p _msttexthash="32935552" _msthash="54">When using the Backdoor Generation module, as long as the Profile.txt is selected, the client will call the Generator.py in the same folder as Profile.txt to modify the code - compile the code - restore the code to generate the EXE of the backdoor source code.</p>
-<p _msttexthash="10141131" _msthash="55">Users can create different generator folders in the Generator folder, or they can create different Profile.txt in the generator folder.</p>
-<p _msttexthash="4065555" _msthash="56">At present, this project has invested less in generators, and users can play freely.</p>
-<p><mark _msttexthash="734890" _msthash="57">(4) More secondary development</mark></p>
-<p _msttexthash="9529130" _msthash="58">You can combine the "command and control model" (client-server-backdoor) to gain a deeper understanding of the project source code.</p>
-<p><img alt="Screenshot 2024-07-16 221156.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/7.png" _mstalt="10829286" _msthash="59"></p>
-<h3 class="atx" id="5-免责声明" _msttexthash="596804" _msthash="60">5. Disclaimer of Warranties</h3>
-<p _msttexthash="19795698" _msthash="61">(1) This project is only for the study and research of network security technology. It aims to improve security development capabilities and develop new offensive and defensive technologies.</p>
-<p _msttexthash="31955079" _msthash="62">(2) If you insist on using this project for security services such as penetration testing, you must first ensure that you have obtained sufficient legal authorization and carry out it under the conditions of compliance with the Cybersecurity Law.</p>
-<p _msttexthash="22168718" _msthash="63">(3) This project is independently developed by individuals, and no comprehensive software testing has been done yet, so users are requested to test the functions of this project in a virtual environment.</p>
-<p _msttexthash="6010212" _msthash="64">(4) This project is completely open source, please do not use this project for any commercial purposes.</p>
-<p _msttexthash="20450495" _msthash="65">(5) If the user has any illegal behavior or any adverse effects caused in the process of using this project, the user shall be responsible for it, and the author of the project shall not be responsible.</p>
+<p _msttexthash="37070371" _msthash="50">When using the "Backdoor Generation" module, as long as the Profile.txt is selected, the client will call the Generator.py in the same folder as the Profile.txt to modify the code - compile the code - restore the code to generate ShellCode and EXE to the backdoor source code.</p>
+<p _msttexthash="10490584" _msthash="51">Users can create different generator folders in the Generator folder, or they can create different Profile.txt within a generator folder.</p>
+<p><mark _msttexthash="734890" _msthash="52">(4) More secondary development</mark></p>
+<p _msttexthash="9529130" _msthash="53">You can combine the "command and control model" (client-server-backdoor) to gain a deeper understanding of the project source code.</p>
+<p><img alt="Screenshot 2024-07-16 221156.png" src="https://raw.githubusercontent.com/HackerCalico/Magic_C2/main/Client/bin/Debug/config/README/7.png" _mstalt="10829286" _msthash="54"></p>
+<h3 class="atx" id="4-免责声明" _msttexthash="596713" _msthash="55">4. Disclaimer of Warranties</h3>
+<p _msttexthash="19795698" _msthash="56">(1) This project is only for the study and research of network security technology. It aims to improve security development capabilities and develop new offensive and defensive technologies.</p>
+<p _msttexthash="31955079" _msthash="57">(2) If you insist on using this project for security services such as penetration testing, you must first ensure that you have obtained sufficient legal authorization and carry out it under the conditions of compliance with the Cybersecurity Law.</p>
+<p _msttexthash="22168718" _msthash="58">(3) This project is independently developed by individuals, and no comprehensive software testing has been done yet, so users are requested to test the functions of this project in a virtual environment.</p>
+<p _msttexthash="6010212" _msthash="59">(4) This project is completely open source, please do not use this project for any commercial purposes.</p>
+<p _msttexthash="20450495" _msthash="60">(5) If the user has any illegal behavior or any adverse effects caused in the process of using this project, the user shall be responsible for it, and the author of the project shall not be responsible.</p>
 </article>
 
 </body></html>
