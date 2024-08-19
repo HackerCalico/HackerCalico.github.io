@@ -59,7 +59,7 @@ lightGallery(document.getElementById('post-bg'), {
    }
  }
 });
-document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>栈溢出 - ROP (一)</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-08-15T15:06:15.007Z" id="date"> 2024-08-15</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-08-19T07:10:15.868Z" id="updated"> 2024-08-19</time></div></span></div></div><hr><div id="post-content"><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>栈溢出是一种允许攻击者向栈中写入过长数据的漏洞。</p>
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>栈溢出 - ROP (一)</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-08-15T15:06:15.007Z" id="date"> 2024-08-15</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-08-19T07:17:42.573Z" id="updated"> 2024-08-19</time></div></span></div></div><hr><div id="post-content"><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>栈溢出是一种允许攻击者向栈中写入过长数据的漏洞。</p>
 <p>ROP 是栈溢出的一种利于方式，攻击者对栈空间进行构造进而调用程序已有的指令片段进行攻击。</p>
 <p><mark>下面通过一个例题来进行讲解。</mark></p>
 <p>因为是入门第一篇文章，所以会讲的比较细。遇到不明白的继续往后看就清楚了。</p>
@@ -330,11 +330,11 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 </tr>
 <tr>
 <td align="left">0x00007FFFFFFFDDD8</td>
-<td align="left">0x4005E3 pop rdi &amp; retn</td>
+<td align="left">0x4005E3</td>
 </tr>
 <tr>
 <td align="left">0x00007FFFFFFFDDE0</td>
-<td align="left">0x601060 buf</td>
+<td align="left">0x601060</td>
 </tr>
 <tr>
 <td align="left">0x00007FFFFFFFDDD8</td>
@@ -342,11 +342,11 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 </tr>
 <tr>
 <td align="left">0x00007FFFFFFFDDD0</td>
-<td align="left">0x4005E3 pop rdi &amp; retn</td>
+<td align="left">0x4005E3</td>
 </tr>
 <tr>
 <td align="left">0x00007FFFFFFFDDC8</td>
-<td align="left">0x601060 buf</td>
+<td align="left">0x601060</td>
 </tr>
 <tr>
 <td align="left">0x00007FFFFFFFDDC0</td>
